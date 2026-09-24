@@ -5,6 +5,8 @@ import {
   IsDecimal,
   IsIn,
   IsInt,
+  IsLatitude,
+  IsLongitude,
   IsNotEmpty,
   IsObject,
   IsOptional,
@@ -35,22 +37,22 @@ export class PropertyQueryParamDto {
   @ApiProperty({description: 'Property Identifier'})
   @IsUUID()
   @IsOptional()
-  id: string; 
+  id?: string; 
 
   @ApiProperty({description: 'Page'})
   @IsInt()
   @IsOptional()
-  page: number; 
+  page?: number; 
 
   @ApiProperty({description: 'PageSize'})
   @IsInt()
   @IsOptional()
-  pageSize: number; 
+  pageSize?: number; 
 
   @ApiProperty({description: 'search for property'})
   @IsString()
   @IsOptional()
-  search: string; 
+  search?: string; 
 
   @ApiProperty({
     description: 'Property location coordinates',
@@ -58,7 +60,7 @@ export class PropertyQueryParamDto {
   })
   @IsObject()
   @IsOptional()
-  location: Coordinate;
+  location?: Coordinate;
 
   @ApiPropertyOptional({
     description: 'Whether the property is available',
@@ -77,7 +79,7 @@ export class PropertyQueryParamDto {
   @IsIn(PropertyType.enumValues)
   @IsObject()
   @IsOptional()
-  type: (typeof PropertyType.enumValues)[number];
+  type?: (typeof PropertyType.enumValues)[number];
 }
 
 export class CreatePropertyDto {
@@ -270,4 +272,28 @@ export class PropertyPaginatedResponseDto {
   @ValidateNested({ each: true })
   @Type(() => PropertObjectDto)
   data: PropertObjectDto[];
+}
+
+export class NearMeQueryDto {
+  @ApiProperty({ description: 'Latitude', example: 6.5244 })
+  @Type(() => Number)
+  @IsLatitude()
+  latitude: number;
+
+  @ApiProperty({ description: 'Longitude', example: 3.3792 })
+  @Type(() => Number)
+  @IsLongitude()
+  longitude: number;
+
+  @ApiPropertyOptional({ description: 'Page', default: 1 })
+  @Type(() => Number)
+  @IsOptional()
+  @IsInt()
+  page?: number;
+
+  @ApiPropertyOptional({ description: 'Page size', default: 10 })
+  @Type(() => Number)
+  @IsOptional()
+  @IsInt()
+  pageSize?: number;
 }

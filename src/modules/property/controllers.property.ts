@@ -1,31 +1,63 @@
-import { Controller, Get, Post, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, Query } from '@nestjs/common';
 import { PropertyService } from './services.property.js';
+import {
+  PropertyQueryParamDto,
+  CreatePropertyDto,
+  UpdatePropertyDto,
+  PropertObjectDto,
+  PropertyPaginatedResponseDto,
+  NearMeQueryDto,
+} from './dtos.property.js';
+import {
+  PropertyCreateDoc,
+  GetPropertiesDoc,
+  getPropertyByIdDoc,
+  updatePropertyDoc,
+  deletePropertyDoc,
+  findPropertyNearDoc,
+} from './docs.property.js';
 
 @Controller('properties')
-export class CatsController {
-  @Get()
-  fetch(): string {
-    return 'This action returns all properties using the params';
-  }
+export class PropertyController {
+  constructor(private readonly propertyService: PropertyService) {}
 
   @Get()
-  fetchNearMe(): string {
-    return 'This action returns all properties near you';
+  @GetPropertiesDoc()
+  fetch(@Query() params: PropertyQueryParamDto): Promise<PropertyPaginatedResponseDto> {
+    return this.propertyService.fetchProperty(params);
+  }
+
+  @Get('near-me')
+  @findPropertyNearDoc()
+  nearMe(@Query() query: NearMeQueryDto): Promise<PropertyPaginatedResponseDto> {
+    return this.propertyService.fetchProperty({
+      location: { latitude: query.latitude, longitude: query.longitude },
+      page: query.page,
+      pageSize: query.pageSize,
+    });
+  }
+
+  @Get(':id')
+  @getPropertyByIdDoc()
+  getById(@Param('id') id: string): Promise<PropertObjectDto | null> {
+    return this.propertyService.getById(id);
   }
 
   @Post()
-  create(): string {
-    return 'This action create a Property';
+  @PropertyCreateDoc()
+  create(@Body() data: CreatePropertyDto): Promise<PropertObjectDto> {
+    return this.propertyService.createProperty(data);
   }
 
-  @Patch()
-  update(): string {
-    return 'This action update a property';
+  @Patch(':id')
+  @updatePropertyDoc()
+  update(@Param('id') id: string, @Body() data: UpdatePropertyDto): Promise<PropertObjectDto> {
+    return this.propertyService.updateProperty(id, data);
   }
 
-  @Delete()
-  delete(): string {
-    return 'This action delete a property';
+  @Delete(':id')
+  @deletePropertyDoc()
+  delete(@Param('id') id: string): Promise<PropertObjectDto> {
+    return this.propertyService.deleteProperty(id);
   }
 }
-

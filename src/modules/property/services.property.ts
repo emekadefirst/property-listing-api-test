@@ -21,4 +21,8 @@ export class PropertyService {
   async fetchProperty(params: PropertyQueryParams): Promise<PropertyPaginatedResponse> {
     return await this.repo.fetch(params);
   }
+
+  async getById(id: string): Promise<PropertyObject | null> {
+    return await this.repo.getById(id);
+  }
 }
