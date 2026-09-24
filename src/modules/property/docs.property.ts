@@ -3,16 +3,13 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
 
 import {
   CreatePropertyDto,
-  NearMeQueryDto,
   PropertObjectDto,
   PropertyPaginatedResponseDto,
-  PropertyQueryParamDto,
   UpdatePropertyDto,
 } from './dtos.property.js';
 
@@ -41,7 +38,6 @@ export function GetPropertiesDoc(): MethodDecorator {
       summary: 'Fetch properties',
       description: 'Fetch a paginated list of properties with optional filters and sorting.',
     }),
-    ApiQuery({ type: PropertyQueryParamDto }),
     ApiResponse({
       status: HttpStatus.OK,
       description: 'A paginated list of properties.',
@@ -50,24 +46,6 @@ export function GetPropertiesDoc(): MethodDecorator {
   );
 }
 
-export function getPropertyByIdDoc(): MethodDecorator {
-  return applyDecorators(
-    ApiOperation({
-      summary: 'Get a property by ID',
-      description: 'Fetch a single property by its ID.',
-    }),
-    ApiParam({ name: 'id', description: 'Property ID', type: String, required: true }),
-    ApiResponse({
-      status: HttpStatus.OK,
-      description: 'The property.',
-      type: PropertObjectDto,
-    }),
-    ApiResponse({
-      status: HttpStatus.NOT_FOUND,
-      description: 'Property not found.',
-    }),
-  );
-}
 
 export function updatePropertyDoc(): MethodDecorator {
   return applyDecorators(
@@ -115,7 +93,6 @@ export function findPropertyNearDoc(): MethodDecorator {
       description:
         'Fetch a paginated list of properties sorted by distance from the given coordinates.',
     }),
-    ApiQuery({ type: NearMeQueryDto }),
     ApiResponse({
       status: HttpStatus.OK,
       description: 'A paginated list of nearby properties.',

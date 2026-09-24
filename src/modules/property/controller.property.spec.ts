@@ -22,7 +22,6 @@ type MockedService = {
   updateProperty: Mock;
   deleteProperty: Mock;
   fetchProperty: Mock;
-  getById: Mock;
 };
 
 const propertyFixture: PropertObjectDto = {
@@ -72,7 +71,6 @@ describe('PropertyController', () => {
       updateProperty: vi.fn(),
       deleteProperty: vi.fn(),
       fetchProperty: vi.fn(),
-      getById: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -115,15 +113,6 @@ describe('PropertyController', () => {
         page: 1,
         pageSize: 10,
       });
-    });
-  });
-
-  describe('getById', () => {
-    it('delegates to PropertyService.getById', async () => {
-      service.getById.mockResolvedValue(propertyFixture);
-
-      await expect(controller.getById(propertyFixture.id)).resolves.toBe(propertyFixture);
-      expect(service.getById).toHaveBeenCalledWith(propertyFixture.id);
     });
   });
 

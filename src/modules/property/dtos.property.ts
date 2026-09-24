@@ -34,27 +34,27 @@ class AgentDto {
 }
 
 export class PropertyQueryParamDto {
-  @ApiProperty({description: 'Property Identifier'})
+  @ApiPropertyOptional({description: 'Property Identifier'})
   @IsUUID()
   @IsOptional()
   id?: string; 
 
-  @ApiProperty({description: 'Page'})
+  @ApiPropertyOptional({description: 'Page'})
   @IsInt()
   @IsOptional()
   page?: number; 
 
-  @ApiProperty({description: 'PageSize'})
+  @ApiPropertyOptional({description: 'PageSize'})
   @IsInt()
   @IsOptional()
   pageSize?: number; 
 
-  @ApiProperty({description: 'search for property'})
+  @ApiPropertyOptional({description: 'search for property'})
   @IsString()
   @IsOptional()
   search?: string; 
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Property location coordinates',
     example: { latitude: 6.5244, longitude: 3.3792 },
   })
@@ -71,7 +71,7 @@ export class PropertyQueryParamDto {
   @IsBoolean()
   isAvailable?: boolean;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Property type',
     enum: PropertyType.enumValues,
     example: 'rent',

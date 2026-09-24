@@ -6,7 +6,6 @@ export const Agent = pgTable("agents", {
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   phone: varchar("phone", { length: 20 }),
-  password: varchar("password", { length: 128 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => ({

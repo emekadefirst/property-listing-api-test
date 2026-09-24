@@ -11,7 +11,6 @@ import {
 import {
   PropertyCreateDoc,
   GetPropertiesDoc,
-  getPropertyByIdDoc,
   updatePropertyDoc,
   deletePropertyDoc,
   findPropertyNearDoc,
@@ -27,6 +26,7 @@ export class PropertyController {
     return this.propertyService.fetchProperty(params);
   }
 
+  
   @Get('near-me')
   @findPropertyNearDoc()
   nearMe(@Query() query: NearMeQueryDto): Promise<PropertyPaginatedResponseDto> {
@@ -37,11 +37,7 @@ export class PropertyController {
     });
   }
 
-  @Get(':id')
-  @getPropertyByIdDoc()
-  getById(@Param('id') id: string): Promise<PropertObjectDto | null> {
-    return this.propertyService.getById(id);
-  }
+
 
   @Post()
   @PropertyCreateDoc()
