@@ -12,12 +12,15 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "dev": "nest start --debug --watch",
     "start": "node dist/main",
+    "init-db": "drizzle-kit generate",
+    "makemigrations": "drizzle-kit generate",
+    "migrate": "bun ./src/scripts/migrate.scripts.ts",   
+    "enableDBExtension": "bun ./src/scripts/enable-postgis.ts",  
     "lint": "oxlint --type-aware src/ test/",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
-    "test:debug": "vitest --inspect-brk --no-file-parallelism",
-    "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
+    "test:debug": "vitest --inspect-brk --no-file-parallelism"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
@@ -29,6 +32,7 @@
     "drizzle-kit": "^0.31.11",
     "drizzle-orm": "^0.45.3",
     "drizzle-zod": "^0.8.3",
+    "pg": "^8.23.0",
     "pino": "^10.3.1",
     "postgres": "^3.4.9",
     "reflect-metadata": "^0.2.2",
