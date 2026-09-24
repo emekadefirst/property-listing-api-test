@@ -28,6 +28,13 @@ export class PropertyRepository {
 
     const whereClause = filters.length > 0 ? and(...filters) : undefined;
 
+    // Origin as a single bound text parameter. Passing the coordinates through
+    // CONCAT as bare params makes Postgres fail to infer their types (42P18),
+    // and placing them inside the quoted literal turns them into plain text.
+    const origin = location
+      ? `POINT(${location.longitude} ${location.latitude})`
+      : null;
+
     // Calculate distance if location is provided
     const distanceColumn = location
       ? sql<number>`
@@ -40,10 +47,7 @@ export class PropertyRepository {
               ')'), 
               4326
             ),
-            ST_GeomFromText(
-              CONCAT('POINT(${location.longitude} ${location.latitude})'), 
-              4326
-            )
+            ST_GeomFromText(${origin}, 4326)
           ) / 1000
         `.as('distance')
       : sql<null>`NULL`.as('distance');
@@ -95,7 +99,7 @@ export class PropertyRepository {
         ...item,
         createdAt: item.createdAt.toISOString(),
         updatedAt: item.updatedAt.toISOString(),
-        distance: item.distance ? Math.round(item.distance * 100) / 100 : null,
+        distance: typeof item.distance === 'number' ? Math.round(item.distance * 100) / 100 : null,
       })),
     };
   }

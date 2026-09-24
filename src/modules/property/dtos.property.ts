@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDateString,
@@ -40,11 +40,13 @@ export class PropertyQueryParamDto {
   id?: string; 
 
   @ApiPropertyOptional({description: 'Page'})
+  @Type(() => Number)
   @IsInt()
   @IsOptional()
   page?: number; 
 
   @ApiPropertyOptional({description: 'PageSize'})
+  @Type(() => Number)
   @IsInt()
   @IsOptional()
   pageSize?: number; 
@@ -68,6 +70,11 @@ export class PropertyQueryParamDto {
     default: true,
   })
   @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value; // anything else falls through to @IsBoolean()
+  })
   @IsBoolean()
   isAvailable?: boolean;
 
@@ -77,7 +84,6 @@ export class PropertyQueryParamDto {
     example: 'rent',
   })
   @IsIn(PropertyType.enumValues)
-  @IsObject()
   @IsOptional()
   type?: (typeof PropertyType.enumValues)[number];
 }
