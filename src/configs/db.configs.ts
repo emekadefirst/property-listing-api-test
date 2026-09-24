@@ -1,3 +1,8 @@
+// Must stay first: the values below are read at module scope.
+// Node does not load .env on its own (Bun does), so entry points like
+// `nest start` and drizzle-kit would silently fall back to the defaults.
+import "dotenv/config";
+
 const dbDefaults = {
   port: 5432,
   host: "localhost",

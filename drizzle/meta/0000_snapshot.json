@@ -1,5 +1,5 @@
 {
-  "id": "5bc48a5e-8e8e-4485-879c-373c4eca51b9",
+  "id": "4fd343ea-b888-4196-a407-142561cc12cc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -87,21 +87,6 @@
         }
       },
       "indexes": {
-        "idx_properties_location": {
-          "name": "idx_properties_location",
-          "columns": [
-            {
-              "expression": "location",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "idx_properties_slug": {
           "name": "idx_properties_slug",
           "columns": [

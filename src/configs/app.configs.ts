@@ -1,3 +1,6 @@
+// Must stay first: the values below are read at module scope.
+import "dotenv/config";
+
 const appDefaults = {
   port: 3000,
   host: "0.0.0.0",

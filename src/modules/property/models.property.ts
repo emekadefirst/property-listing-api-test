@@ -29,7 +29,6 @@ export const Property = pgTable("properties", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => ({
-  locationIndex: index("idx_properties_location").on(table.location),
   slugIndex: index("idx_properties_slug").on(table.slug),
   agentIdIndex: index("idx_properties_agent_id").on(table.agentId),
   typeIndex: index("idx_properties_type").on(table.type),

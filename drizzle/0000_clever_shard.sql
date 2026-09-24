@@ -25,7 +25,6 @@ CREATE TABLE "agents" (
 );
 --> statement-breakpoint
 ALTER TABLE "properties" ADD CONSTRAINT "properties_agent_id_agents_id_fk" FOREIGN KEY ("agent_id") REFERENCES "public"."agents"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "idx_properties_location" ON "properties" USING btree ("location");--> statement-breakpoint
 CREATE INDEX "idx_properties_slug" ON "properties" USING btree ("slug");--> statement-breakpoint
 CREATE INDEX "idx_properties_agent_id" ON "properties" USING btree ("agent_id");--> statement-breakpoint
 CREATE INDEX "idx_properties_type" ON "properties" USING btree ("type");--> statement-breakpoint

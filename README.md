@@ -97,7 +97,8 @@ cp .env.example .env   # if you keep an .env.example
 
 ### 4. Set up the database
 
-Make sure a PostgreSQL server is running and that PostGIS is available:
+Make sure a PostgreSQL server is running and that PostGIS is available (the `postgis/postgis`
+image used by `docker-compose.yml` already includes it):
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS postgis;   -- needed for the near-me search
@@ -128,15 +129,20 @@ bun run start
 The API listens on `http://localhost:3000` (configurable via `APP_PORT`), and Swagger UI is at
 **http://localhost:3000/docs**.
 
-### Docker (alternative)
+### Database with Docker (alternative)
+
+If you don't want to run PostgreSQL locally, `docker-compose.yml` starts just a PostGIS-enabled
+database — run the API on your host against it:
 
 ```bash
-cp .env.example .env        # set DB_* and APP_PORT
-docker compose up --build
+cp .env.example .env       # set DB_* / APP_PORT
+docker compose up -d       # PostgreSQL + PostGIS on ${DB_PORT}
+bunx drizzle-kit push      # apply the schema (or generate + migrate)
+bun run dev
 ```
 
-This starts a PostGIS-enabled PostgreSQL plus the API; Drizzle migrations are applied
-automatically before the server starts. The API is at `http://localhost:3000` and Swagger at `/docs`.
+The API connects to `localhost:${DB_PORT}`. (A `Dockerfile` is included if you'd rather
+containerise the API as well.)
 
 ---
 
