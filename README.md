@@ -6,24 +6,7 @@ A REST API for property listings, built with **NestJS** and **PostgreSQL** (Driz
 Clients can perform CRUD on **properties** and **agents**, list properties with pagination and
 filters, and find properties **near a coordinate** — sorted by distance using **PostGIS**.
 
-Interactive API docs (Swagger UI) are served at `/docs` once the app is running.
 
----
-
-## Table of contents
-
-- [Overview](#overview)
-- [Tech stack](#tech-stack)
-- [Requirements](#requirements)
-- [Getting started](#getting-started)
-- [Environment variables](#environment-variables)
-- [API reference](#api-reference)
-- [Testing](#testing)
-- [Project structure](#project-structure)
-- [Design decisions](#design-decisions)
-- [What I'd improve with more time](#what-id-improve-with-more-time)
-
----
 
 ## Overview
 
@@ -87,70 +70,28 @@ npm install
 bun install
 ```
 
-### 3. Configure the environment
 
-Create a `.env` file in the project root (see [Environment variables](#environment-variables)):
-
-```bash
-cp .env.example .env   # if you keep an .env.example
-```
-
-### 4. Set up the database
-
-Make sure a PostgreSQL server is running and that PostGIS is available (the `postgis/postgis`
-image used by `docker-compose.yml` already includes it):
-
-```sql
-CREATE EXTENSION IF NOT EXISTS postgis;   -- needed for the near-me search
-```
-
-Then push the Drizzle schema to the database:
-
-```bash
-# Apply the schema directly (great for local development)
-bunx drizzle-kit push
-
-# ...or generate SQL migrations and run them
-bunx drizzle-kit generate
-bunx drizzle-kit migrate
-```
-
-### 5. Run the app
-
-```bash
-# Development (watch mode)
-bun run dev
-
-# Production
-bun run build
-bun run start
-```
-
-The API listens on `http://localhost:3000` (configurable via `APP_PORT`), and Swagger UI is at
-**http://localhost:3000/docs**.
-
-### Database with Docker (alternative)
+### Database with Docker 
 
 If you don't want to run PostgreSQL locally, `docker-compose.yml` starts just a PostGIS-enabled
 database — run the API on your host against it:
 
 ```bash
-cp .env.example .env       # set DB_* / APP_PORT
-docker compose up -d       # PostgreSQL + PostGIS on ${DB_PORT}
-bunx drizzle-kit push      # apply the schema (or generate + migrate)
-bun run dev
+cp .env.example .env   # paste the actual value in the .env that was created after running the command
+docker compose up -d  # PostgreSQL 
+bunx drizzle-kit push # Apply or create migrations to running DB 
+bun run enableDBExtension # enable PostGIS extension
+bun run dev # run server
 ```
 
-The API connects to `localhost:${DB_PORT}`. (A `Dockerfile` is included if you'd rather
-containerise the API as well.)
+The API listens on `http://localhost:3000` (configurable via `APP_PORT`), and Swagger UI is at
+**http://localhost:3000/docs**.
 
 ---
 
 ## API reference
 
-Base URL: `http://localhost:3000`. Interactive docs: **`GET /docs`**.
-
-
+Interactive docs: **`GET /docs`**.
 
 ### Error handling
 
