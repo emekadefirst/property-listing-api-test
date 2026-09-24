@@ -187,6 +187,23 @@ bun run test:cov     # coverage
   and documented consistently.
 - **Centralised errors** (`AppError` + subclasses) keep controllers/services free of HTTP details.
 
+### How PostGIS powers `GET /properties/near-me`
+
+Coordinates are stored in a plain JSON column  rather
+than a geometry column, so PostGIS does the work at query time instead of at write time.
+
+- The stored JSON coordinates are read with  and cast to float, the origin is bound as a single
+text parameter, and both are parsed as SRID `4326` points. 
+- ST_DistanceSphere  is
+the right tool for lat/lng on WGS84: it measures on a spherical earth model and returns **metres**, so
+the / 1000 converts to kilometres.
+
+- The query is ordered by that distance and every row comes
+back with distance rounded to two decimals in km. And with our the lat and log params it's ordered by createdAt
+
+The endpoint sorts by distance but applies no radius cutoff — every property is returned, nearest
+first.
+
 ---
 
 ## What I'd improve with more time
@@ -197,5 +214,7 @@ bun run test:cov     # coverage
 - I'll also modularize the Docker files used into a single docker folder to keep the project clean.
 - I'll implement a session based authentication, add a password field to the agent table and hash before storing it using argon.
 - I'll also write a module that generate presign link for the client app to a blob storage  to store files like Property images views and even Agent Profile image and also write these files urls to the db
+- I'll add a radius distance filter to GET /properties/near-me, so it can return only the
+  listings within X km instead of every property sorted by distance.
 
 
