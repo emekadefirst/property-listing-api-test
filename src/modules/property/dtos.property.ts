@@ -18,7 +18,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 
 import { PropertyType, type Coordinate } from './models.property.js';
 
@@ -157,82 +157,9 @@ export class CreatePropertyDto {
   isAvailable?: boolean;
 }
 
-export class UpdatePropertyDto {
-  @ApiProperty({
-    description: 'Property title',
-    example: 'Luxury 3-bedroom apartment',
-  })
-  @IsString()
-  @MaxLength(255)
-  @IsNotEmpty()
-  @IsObject()
-  title: string;
-
-  @ApiProperty({
-    description: 'Property price',
-    example: '250000.00',
-  })
-  @IsString()
-  @IsDecimal({ force_decimal: true })
-  @IsNotEmpty()
-  @IsObject()
-  price: string;
-
-  @ApiProperty({
-    description: 'Property type',
-    enum: PropertyType.enumValues,
-    example: 'rent',
-  })
-  @IsIn(PropertyType.enumValues)
-  @IsNotEmpty()
-  @IsObject()
-  type: (typeof PropertyType.enumValues)[number];
-
-  @ApiPropertyOptional({
-    description: 'Property description',
-    example: 'A spacious apartment with a sea view',
-  })
-  @IsOptional()
-  @IsString()
-  @IsObject()
-  description?: string;
-
-  @ApiProperty({
-    description: 'Number of bedrooms',
-    example: 3,
-  })
-  @IsInt()
-  @Min(0)
-  @IsObject()
-  bedrooms: number;
-
-  @ApiProperty({
-    description: 'Property location coordinates',
-    example: { latitude: 6.5244, longitude: 3.3792 },
-  })
-  @IsObject()
-  @IsObject()
-  location: Coordinate;
-
-  @ApiProperty({
-    description: 'Listing agent'
-  })
-  @IsString()
-  @MaxLength(255)
-  @IsNotEmpty()
-  @IsObject()
-  agentId: string;
-
-  @ApiPropertyOptional({
-    description: 'Whether the property is available',
-    example: true,
-    default: true,
-  })
-  @IsOptional()
-  @IsBoolean()
-  @IsObject()
-  isAvailable?: boolean;
-}
+// PATCH semantics: every field optional, validation rules inherited from the
+// create DTO so the two can't drift apart.
+export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {}
 
 export class PropertObjectDto extends CreatePropertyDto {
   @ApiProperty({

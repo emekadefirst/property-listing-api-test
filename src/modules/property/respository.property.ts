@@ -104,6 +104,19 @@ export class PropertyRepository {
     };
   }
 
+  private slugify(title: string) {
+    return (
+      title
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "") // drop accents so "Café" -> "Cafe"
+        .replace(/['\u2019]/g, "") // "Nuit's" -> "nuits", not "nuit-s"
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 480)
+        .replace(/-+$/, "") || "title"
+    );
+  }
   private async toPropertyObject(property: typeof Property.$inferSelect): Promise<PropertyObject> {
     const [agent] = await db
       .select({ id: Agent.id, name: Agent.name, email: Agent.email, phone: Agent.phone })
@@ -120,7 +133,10 @@ export class PropertyRepository {
 
   async create(data: CreatePropertyInput): Promise<PropertyObject> {
     try {
-      const [property] = await db.insert(Property).values(data).returning();
+      const [property] = await db
+        .insert(Property)
+        .values({ ...data, slug: this.slugify(data.title) })
+        .returning();
       if (!property) throw new AppError("Failed to create property", 500);
       return this.toPropertyObject(property);
     } catch (error) {
@@ -136,7 +152,7 @@ export class PropertyRepository {
     try {
       const [property] = await db
         .update(Property)
-        .set(data)
+        .set(data.title ? { ...data, slug: this.slugify(data.title) } : data)
         .where(eq(Property.id, id))
         .returning();
       if (!property) throw new AppError("Property not found or update failed");

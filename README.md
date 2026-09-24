@@ -79,7 +79,7 @@ database — run the API on your host against it:
 ```bash
 cp .env.example .env   # paste the actual value in the .env that was created after running the command
 docker compose up -d  # PostgreSQL 
-bunx drizzle-kit push # Apply or create migrations to running DB 
+bun run migrate # Apply  migrations to running DB 
 bun run enableDBExtension # enable PostGIS extension
 bun run dev # run server
 ```
